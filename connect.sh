@@ -1,15 +1,25 @@
+#subscribe for topic for exact device
 yc iot mqtt subscribe \
 --debug \
---username arean1frk3n1vjugbnoq \
---password Semen21.02.2000 \
---topic '$device/arean1frk3n1vjugbnoq/commands' \
+--cert cert.pem \
+--key key.pem \
+--topic '$devices/are18v6krffaq7o1mldk/commands' \
 --qos 1
 
+#publish command for device
 yc iot mqtt publish \
 --debug \
---username arean1frk3n1vjugbnoq \
---password Semen21.02.2000 \
---topic '$devices/arean1frk3n1vjugbnoq/events' \
+--cert cert_1.pem \
+--key key_1.pem \
+--topic '$devices/are18v6krffaq7o1mldk/commands' \
+--message 'Test next' \
+--qos 1
+
+
+yc iot mqtt publish \
+--cert cert.pem \
+--key key.pem \
+--topic '$devices/are18v6krffaq7o1mldk/events' \
 --message 'Test data' \
 --qos 1
 
@@ -28,7 +38,7 @@ mosquitto_pub -d -h mqtt.cloud.yandex.net \
 -p 8883 \
 --cafile rootCA.crt \
 --cert cert.pem \
---key ke.pem \
+--key key.pem \
 -t '$devices/aregq0ha5729atv7cv9n/events' \
 -m 'test' \
 -q 1

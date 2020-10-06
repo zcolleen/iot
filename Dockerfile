@@ -1,11 +1,11 @@
 FROM ubuntu
 
 #RUN apt-get install bash
-RUN apt-get update ; apt-get install -y curl ; \
-apt-get install -y mosquitto 
-RUN apt-get install mosquitto mosquitto-clients
-RUN apt-get install openssl
-RUN apt-get install -y vim
+RUN apt-get update ; apt-get install -y curl
+#apt-get install -y mosquitto 
+#RUN apt-get install mosquitto mosquitto-clients
+#RUN apt-get install openssl
+#RUN apt-get install -y vim
 RUN curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
 
 
@@ -15,8 +15,10 @@ COPY ./keys_certs/key.pem .
 COPY ./keys_certs/cert.pem .
 COPY ./keys_certs/key_1.pem .
 COPY ./keys_certs/cert_1.pem .
-COPY ./start.sh .
+COPY ./sender.sh .
+COPY ./reciever.sh .
 
 EXPOSE 8883
 
-CMD [ "sh", "start.sh" ]
+CMD ["bash"]
+#CMD [ "sh", "start.sh" ]

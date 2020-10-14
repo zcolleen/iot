@@ -7,6 +7,7 @@ RUN apt-get update ; apt-get install -y curl
 #RUN apt-get install openssl
 #RUN apt-get install -y vim
 RUN curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+RUN apt-get install -y vim
 
 
 COPY ./crt/rootCA.crt .

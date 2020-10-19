@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import ssl
 
+
 def on_connect(client, userdata, flags, rc):
   print("Connected:" + str(rc))
 #  client.subscribe("$devices/are18v6krffaq7o1mldk/commands", qos=1)

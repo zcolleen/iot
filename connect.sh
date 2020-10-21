@@ -55,8 +55,8 @@ mosquitto_sub -d -h mqtt.cloud.yandex.net \
 
 openssl req -x509 \
 -newkey rsa:4096 \
--keyout key_3.pem \
--out cert_3.pem \
+-keyout key_conveyer.pem \
+-out cert_conveyer.pem \
 -nodes \
 -days 365 \
 -subj '/CN=localhost'

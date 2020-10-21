@@ -17,11 +17,13 @@ register = mqtt.Client(client_id="aresgcakub7pk92mbhej")
 register.on_connect = on_connect
 register.on_message = on_message
 register.on_publish = on_publish
-register.tls_set(ca_certs="../crt/rootCA.crt", certfile="../keys_certs/cert_1.pem", keyfile="../keys_certs/key_1.pem", cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2)
+register.tls_set(ca_certs="../crt/rootCA.crt", certfile="../keys_certs/cert_register.pem",
+keyfile="../keys_certs/key_register.pem", cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2)
 
 #register.loop_forever()
 register.connect("mqtt.cloud.yandex.net", port=8883)
-register.publish("$devices/are18v6krffaq7o1mldk/commands", payload="sending message from code", qos=1)
+register.publish("$devices/are18v6krffaq7o1mldk/commands",
+payload="sending message from code", qos=1)
 #publish.single("$devices/are18v6krffaq7o1mldk/commands", payload="sending text from module",
 #hostname="mqtt.cloud.yandex.net", port=8883, client_id="are18v6krffaq7o1mldk", tls={'ca_certs':"../crt/rootCA.crt", 'certfile':"../keys_certs/cert_1.pem", 'keyfile':"../keys_certs/key_1.pem"})
 

@@ -1,5 +1,4 @@
 import paho.mqtt.client as mqtt
-import paho.mqtt.publish as publish
 import ssl
 import time
 
@@ -22,11 +21,13 @@ def on_message(client, userdata, message):
 def on_publish(client, userdata, mid):
     print("Message published")
 
+
 def on_message_put(client, userdata, message):
     print(str(message.payload))
 
+
 def polling_devices(register):
-    while all(value == "b'ready'" for value in state.values()) == False: # sending message till all devices are not ready
+    while not all(value == "b'ready'" for value in state.values()): # sending message till all devices are not ready
       if state['storage'] == "b'not_ready'":
         register.publish("$devices/are18v6krffaq7o1mldk/commands", payload="state", qos=1)
     #  if state['conveyer'] == 'not_ready':
@@ -53,10 +54,11 @@ def handler(event, context):
 
     polling_devices(register)
     register.publish("$devices/are18v6krffaq7o1mldk/commands", payload="put", qos=1)
-    #while state['storage'] != 'ready':
+    # while state['storage'] != 'ready':
     #  time.sleep(1)
 
     register.loop_stop()
-    #register.loop_forever()
+    # register.loop_forever()
+
 
 handler(10, 10)

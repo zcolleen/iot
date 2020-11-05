@@ -1,6 +1,5 @@
 import paho.mqtt.client as mqtt
 import ssl
-import time
 
 
 class Conveyer:
@@ -17,7 +16,6 @@ class Conveyer:
 	def on_message(self, client, userdata, message):
 		print(message.topic + ' ' + str(message.payload))
 		if str(message.payload) == "b'state'":
-			print("we won")
 			self.publisher.publish("$devices/are6c1grj2ojp532jr3u/events", payload="ready", qos=1)
 		#elif str(message.payload) == "b'process'":
 			#your code func
@@ -41,8 +39,7 @@ def handler():
 					 tls_version=ssl.PROTOCOL_TLSv1_2)
 	conv.connect("mqtt.cloud.yandex.net", port=8883)
 	print("ready_n_go")
-#	conv.publish("$devices/are6c1grj2ojp532jr3u/events", payload="ready", qos=1)
-	#your_func()
+
 	conv.loop_forever()
 
 

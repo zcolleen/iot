@@ -59,7 +59,6 @@ def handler(event, context):
 	register.loop_start()
 
 	my_register.polling_devices(register)
-#	register.publish("$devices/are18v6krffaq7o1mldk/commands", payload="put", qos=1)
 
 	register.loop_stop()
 

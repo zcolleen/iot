@@ -71,6 +71,7 @@ def handler(event, context):
 	register.connect("mqtt.cloud.yandex.net", port=8883)
 	register.loop_start()
 
+#	print(envent)
 	if Register.store == "b'ready'":
 		register.publish("$devices/are6c1grj2ojp532jr3u/commands", payload="process", qos=1)
 	register.loop_stop()

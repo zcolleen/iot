@@ -5,7 +5,7 @@ import time
 
 class Register:
 
-	state = dict({'storage': "b'not_ready'", 'conveyer': "b'ready'"})  # put in not ready state for conveyer
+	state = dict({'storage': "b'not_ready'", 'conveyer': "b'not_ready'", 'machine1': "b'not_ready'"})  # put in not ready state for conveyer
 
 	def __init__(self, save):
 		self.publisher = save
@@ -41,6 +41,9 @@ class Register:
 				register.publish("$devices/are6c1grj2ojp532jr3u/commands", payload="state", qos=1)  # uncomment this for conveyer
 			time.sleep(5)
 		self.publisher.publish("$devices/are18v6krffaq7o1mldk/commands", payload="put", qos=1)
+		for key in Register.state:
+			Register.state[key] = "b'not_ready'"
+			print(Register.state[key])
 
 
 def handler(event, context):

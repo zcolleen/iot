@@ -11,26 +11,24 @@ class Conveyer:
 	@staticmethod
 	def on_connect(client, userdata, flags, rc):
 		print("Connected: " + str(rc))
-		client.subscribe("$devices/are6c1grj2ojp532jr3u/commands", qos=1)
+		client.subscribe("$devices/are18v6krffaq7o1mldk/commands", qos=1)
 		print("Subscribed")
 
 	def on_message(self, client, userdata, message):
 		print(message.topic + ' ' + str(message.payload))
 		if str(message.payload) == "b'state'":
-			self.publisher.publish("$devices/are6c1grj2ojp532jr3u/events", payload="ready", qos=1)
-		elif str(message.payload) == "b'process'":
-			print("Conveyer processing command")
+			self.publisher.publish("$devices/are18v6krffaq7o1mldk/events", payload="ready", qos=1)
+		elif str(message.payload) == "b'put'":
+			print("Storage processing command")
 			sleep(10)
-			self.publisher.publish("$devices/are6c1grj2ojp532jr3u/events/done", payload="ready", qos=1)
-
+			self.publisher.publish("$devices/are18v6krffaq7o1mldk/events/done", payload="ready", qos=1)
 
 	@staticmethod
 	def on_publish(client, userdata, mid):
-		print("Message published")
+		print("Message published: ready")
 
 
 def handler():
-
 	conv = mqtt.Client(client_id="are6c1grj2ojp532jr3u")
 	my_conv = Conveyer(conv)
 
@@ -38,9 +36,9 @@ def handler():
 	conv.on_message = my_conv.on_message
 	conv.on_publish = Conveyer.on_publish
 
-	conv.tls_set(ca_certs="../crt/rootCA.crt", certfile="../keys_certs/cert_conveyer.pem",
-					 keyfile="../keys_certs/key_conveyer.pem", cert_reqs=ssl.CERT_REQUIRED,
-					 tls_version=ssl.PROTOCOL_TLSv1_2)
+	conv.tls_set(ca_certs="../crt/rootCA.crt", certfile="../keys_certs/cert_storage.pem",
+				 keyfile="../keys_certs/key_storage.pem", cert_reqs=ssl.CERT_REQUIRED,
+				 tls_version=ssl.PROTOCOL_TLSv1_2)
 	conv.connect("mqtt.cloud.yandex.net", port=8883)
 
 	conv.loop_forever()

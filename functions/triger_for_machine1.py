@@ -28,8 +28,8 @@ def handler(event, context):
 	register.on_message = Register.on_message
 	register.on_publish = Register.on_publish
 
-	register.tls_set(ca_certs="clf2/crt/rootCA.crt", certfile="clf2/keys_certs/cert_machine1.pem",
-					keyfile="clf2/keys_machine1/key_register.pem", cert_reqs=ssl.CERT_REQUIRED,
+	register.tls_set(ca_certs="clf2/crt/rootCA.crt", certfile="clf2/keys_certs/cert_register.pem",
+					keyfile="clf2/keys_certs/key_register.pem", cert_reqs=ssl.CERT_REQUIRED,
 					tls_version=ssl.PROTOCOL_TLSv1_2)
 
 	register.connect("mqtt.cloud.yandex.net", port=8883)

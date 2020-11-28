@@ -3,7 +3,7 @@ import ssl
 from time import sleep
 
 
-class Conveyer:
+class Storage:
 
 	def __init__(self, save):
 		self.publisher = save
@@ -29,19 +29,19 @@ class Conveyer:
 
 
 def handler():
-	conv = mqtt.Client(client_id="are6c1grj2ojp532jr3u")
-	my_conv = Conveyer(conv)
+	stor = mqtt.Client(client_id="are6c1grj2ojp532jr3u")
+	my_stor = Storage(stor)
 
-	conv.on_connect = Conveyer.on_connect
-	conv.on_message = my_conv.on_message
-	conv.on_publish = Conveyer.on_publish
+	stor.on_connect = Storage.on_connect
+	stor.on_message = my_stor.on_message
+	stor.on_publish = Storage.on_publish
 
-	conv.tls_set(ca_certs="../crt/rootCA.crt", certfile="../keys_certs/cert_storage.pem",
+	stor.tls_set(ca_certs="../crt/rootCA.crt", certfile="../keys_certs/cert_storage.pem",
 				 keyfile="../keys_certs/key_storage.pem", cert_reqs=ssl.CERT_REQUIRED,
 				 tls_version=ssl.PROTOCOL_TLSv1_2)
-	conv.connect("mqtt.cloud.yandex.net", port=8883)
+	stor.connect("mqtt.cloud.yandex.net", port=8883)
 
-	conv.loop_forever()
+	stor.loop_forever()
 
 
 if __name__ == "__main__":

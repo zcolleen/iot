@@ -15,6 +15,7 @@ class Register:
 		print("Connected: " + str(rc))
 		client.subscribe("$devices/are18v6krffaq7o1mldk/events", qos=1)  # subscribing for devices(storage)
 		client.subscribe("$devices/are6c1grj2ojp532jr3u/events", qos=1)  # subscribing for devices(conveyer)
+		client.subscribe("$devices/are2p8db0r2mne8jbm4d/events", qos=1)  # subscribing for devices(machine1)
 		print("Subscribed")
 
 	@staticmethod
@@ -24,6 +25,8 @@ class Register:
 			Register.state['storage'] = str(message.payload)
 		if message.topic == '$devices/are6c1grj2ojp532jr3u/events':  # for conveyer
 			Register.state['conveyer'] = str(message.payload)
+		if message.topic == '$devices/are2p8db0r2mne8jbm4d/events':  # for machine1
+			Register.state['machine1'] = str(message.payload)
 
 	@staticmethod
 	def on_publish(client, userdata, mid):
@@ -39,6 +42,8 @@ class Register:
 				register.publish("$devices/are18v6krffaq7o1mldk/commands", payload="state", qos=1)
 			if Register.state['conveyer'] == "b'not_ready'":
 				register.publish("$devices/are6c1grj2ojp532jr3u/commands", payload="state", qos=1)  # uncomment this for conveyer
+			if Register.state['machine1'] == "b'not_ready'":
+				register.publish("$devices/are2p8db0r2mne8jbm4d/commands", payload="state", qos=1)  # uncomment this for machine1
 			time.sleep(5)
 		self.publisher.publish("$devices/are18v6krffaq7o1mldk/commands", payload="put", qos=1)
 		for key in Register.state:

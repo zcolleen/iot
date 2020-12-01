@@ -1,11 +1,9 @@
 import paho.mqtt.client as mqtt
 import ssl
-from time import sleep
+import time
 
 
 class Machine1:
-
-	flag_busy = 0
 
 	def __init__(self, save):
 		self.publisher = save
@@ -17,22 +15,25 @@ class Machine1:
 		print("Subscribed")
 
 	def on_message(self, client, userdata, message):
-		print(message.topic + ' ' + str(message.payload))
-		if str(message.payload) == "b'state'" and not Machine1.flag_busy:
+		if str(message.payload) == "b'stop'":
+			print("Forces stop of machine1")
+			exit(1)
+		elif str(message.payload) == "b'state'":
+			print("Machine1 is ready")
 			self.publisher.publish("$devices/are2p8db0r2mne8jbm4d/events", payload="ready", qos=1)
-		elif str(message.payload) == "b'state'" and Machine1.flag_busy:
-			self.publisher.publish("$devices/are2p8db0r2mne8jbm4d/events", payload="not_ready", qos=1)
 		elif str(message.payload) == "b'process'":
 			print("Machine1 processing command")
-			Machine1.flag_busy = 1
-			sleep(15)
-			self.publisher.publish("$devices/are2p8db0r2mne8jbm4d/events/done", payload="ready", qos=1)
-			Machine1.flag_busy = 0
-
+			time.sleep(20)
+			print("Machine1 has finished processing command")
 
 	@staticmethod
 	def on_publish(client, userdata, mid):
 		print("Message published")
+
+
+def publisher(ma1):
+	ma1.publish("$devices/are2p8db0r2mne8jbm4d/events", payload="ready", qos=1)
+	print("Machine1 is ready" + " " + str(Machine1.flag_busy))
 
 
 def handler():
@@ -50,7 +51,6 @@ def handler():
 	ma1.connect("mqtt.cloud.yandex.net", port=8883)
 
 	ma1.loop_forever()
-
 
 if __name__ == "__main__":
 	handler()

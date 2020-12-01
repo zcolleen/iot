@@ -15,9 +15,13 @@ class Storage:
 		print("Subscribed")
 
 	def on_message(self, client, userdata, message):
-		print(message.topic + ' ' + str(message.payload))
-		if str(message.payload) == "b'state'":
+	#	print(message.topic + ' ' + str(message.payload))
+		if str(message.payload) == "b'stop'":
+			print("Forced stop of storage")
+			exit(1)
+		elif str(message.payload) == "b'state'":
 			self.publisher.publish("$devices/are18v6krffaq7o1mldk/events", payload="ready", qos=1)
+			print("Storage is ready")
 		elif str(message.payload) == "b'put'":
 			print("Storage processing command")
 			sleep(10)
@@ -25,7 +29,7 @@ class Storage:
 
 	@staticmethod
 	def on_publish(client, userdata, mid):
-		print("Message published: ready")
+		print("Message published")
 
 
 def handler():

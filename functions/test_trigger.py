@@ -1,13 +1,12 @@
 import paho.mqtt.client as mqtt
 import ssl
-
+import base64
 
 class Register:
 
 	@staticmethod
 	def on_connect(client, userdata, flags, rc):
 		print("Connected: " + str(rc))
-		client.subscribe("$devices/are18v6krffaq7o1mldk/events/done", qos=1)
 		print("Subscribed")
 
 	@staticmethod
@@ -33,7 +32,9 @@ def handler(event, context):
 
 	register.connect("mqtt.cloud.yandex.net", port=8883)
 	register.loop_start()
-
-	if event['messages'][0]['details']['payload'] == "cmVhZHk=":
-		register.publish("$devices/are18v6krffaq7o1mldk/commands", payload="process", qos=1)
+	d = base64.b64decode(event['messages'][0]['details']['payload'])
+#	print(d)
+	s2 = d.decode("UTF-8")
+#	print(s2)
+	register.publish("$devices/are18v6krffaq7o1mldk/commands", payload=s2, qos=1)
 	register.loop_stop()

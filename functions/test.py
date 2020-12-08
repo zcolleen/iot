@@ -1,14 +1,35 @@
 
 
+class Test:
+	def __init__(self, mas):
+		self.mas = mas
+		self.test = [[]]
 
-massive = [[10, 13, 20, 10],
-		   [40, 10, 32]]
+	def chenge(self):
+		self.mas[0][1] = 488
 
-print(massive)
+	def getMas(self):
+		return self.mas
 
-for mas in massive:
-	for index in enumerate(mas):
-		if index[1] == 10 and len(mas) != index[0] + 1:
-			mas[index[0] + 1] = 11
 
-print(massive)
+mas = [[10, 20], [21, 43], "sdfsdf"]
+
+#print(mas)
+
+#mas.append(200)
+#print(mas[2][0])
+
+#print(mas)
+test = Test(mas)
+#print(len(test.test))
+
+for m in mas[1:]:
+	print(m)
+
+
+
+#mas1 = test.getMas()
+#mas1[0][0] = 488
+
+
+#print(mas)

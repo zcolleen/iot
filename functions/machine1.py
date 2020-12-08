@@ -5,6 +5,8 @@ import time
 
 class Machine1:
 
+	flag_publish = 0
+
 	def __init__(self, save):
 		self.publisher = save
 
@@ -20,11 +22,14 @@ class Machine1:
 			exit(1)
 		elif str(message.payload) == "b'state'":
 			print("Machine1 is ready")
-			self.publisher.publish("$devices/are2p8db0r2mne8jbm4d/events", payload="ready", qos=1)
+			Machine1.flag_publish = 2
+			#self.publisher.publish("$devices/are2p8db0r2mne8jbm4d/events", payload="ready", qos=1)
 		elif str(message.payload) == "b'process'":
 			print("Machine1 processing command")
 			time.sleep(20)
 			print("Machine1 has finished processing command")
+			Machine1.flag_publish = 1
+			#self.publisher.publish("$devices/are6c1grj2ojp532jr3u/commands", payload="machine1_done", qos=1)
 
 	@staticmethod
 	def on_publish(client, userdata, mid):
@@ -32,8 +37,12 @@ class Machine1:
 
 
 def publisher(ma1):
-	ma1.publish("$devices/are2p8db0r2mne8jbm4d/events", payload="ready", qos=1)
-	print("Machine1 is ready" + " " + str(Machine1.flag_busy))
+	if Machine1.flag_publish == 2:
+		ma1.publish("$devices/are2p8db0r2mne8jbm4d/events", payload="ready", qos=1)
+		#print("Machine1 is ready" + " " + str(Machine1.flag_busy))
+	if Machine1.flag_publish == 1:
+		ma1.publish("$devices/are6c1grj2ojp532jr3u/commands", payload="machine1_done", qos=1)
+	Machine1.flag_publish = 0
 
 
 def handler():
@@ -49,8 +58,11 @@ def handler():
 					 keyfile="../keys_certs/key_machine1.pem", cert_reqs=ssl.CERT_REQUIRED,
 					 tls_version=ssl.PROTOCOL_TLSv1_2)
 	ma1.connect("mqtt.cloud.yandex.net", port=8883)
+	ma1.loop_start()
+	while True:
+		if Machine1.flag_publish > 0:
+			publisher(ma1)
 
-	ma1.loop_forever()
 
 if __name__ == "__main__":
 	handler()

@@ -4,11 +4,11 @@ import time
 
 
 class Register:
+	state = dict({'storage': "b'not_ready'", 'conveyer': "b'not_ready'",
+				  'machine1': "b'not_ready'"})  # put in not ready state for conveyer
 
-	state = dict({'storage': "b'not_ready'", 'conveyer': "b'not_ready'", 'machine1': "b'not_ready'"})  # put in not ready state for conveyer
-
-	def __init__(self, save):
-		self.publisher = save
+	def __init__(self, client):
+		self.publisher = client
 
 	@staticmethod
 	def on_connect(client, userdata, flags, rc):
@@ -36,23 +36,27 @@ class Register:
 	def on_message_put(client, userdata, message):
 		print(str(message.payload))
 
-	def polling_devices(self, register):
-		while not all(value == "b'ready'" for value in Register.state.values()):  # sending message till all devices are not ready
+	def polling_devices(self, register, data):
+		while not all(value == "b'ready'" for value in
+					  Register.state.values()):  # sending message till all devices are not ready
 			if Register.state['storage'] == "b'not_ready'":
 				register.publish("$devices/are18v6krffaq7o1mldk/commands", payload="state", qos=1)
 			if Register.state['conveyer'] == "b'not_ready'":
-				register.publish("$devices/are6c1grj2ojp532jr3u/commands", payload="state", qos=1)  # uncomment this for conveyer
+				register.publish("$devices/are6c1grj2ojp532jr3u/commands", payload="state",
+								 qos=1)  # uncomment this for conveyer
 			if Register.state['machine1'] == "b'not_ready'":
-				register.publish("$devices/are2p8db0r2mne8jbm4d/commands", payload="state", qos=1)  # uncomment this for machine1
+				register.publish("$devices/are2p8db0r2mne8jbm4d/commands", payload="state",
+								 qos=1)  # uncomment this for machine1
 			time.sleep(5)
-		self.publisher.publish("$devices/are18v6krffaq7o1mldk/commands", payload="put", qos=1)
+		print("ID_{}_col_{}_row_{}".format(data['id'], data['column'], data['row']))
+		self.publisher.publish("$devices/are18v6krffaq7o1mldk/commands",
+							   payload="ID_{}_col_{}_row_{}".format(data['id'], data['column'], data['row']), qos=1)
 		for key in Register.state:
 			Register.state[key] = "b'not_ready'"
 			print(Register.state[key])
 
 
 def handler(event, context):
-
 	register = mqtt.Client(client_id="aresgcakub7pk92mbhej")
 	my_register = Register(register)
 
@@ -66,9 +70,13 @@ def handler(event, context):
 	register.connect("mqtt.cloud.yandex.net", port=8883)
 	register.loop_start()
 
-	my_register.polling_devices(register)
+	my_register.polling_devices(register, {'row': event['queryStringParameters']['row'],
+										   'column': event['queryStringParameters']['column'],
+										   'id': event['queryStringParameters']['id']})
 
 	register.loop_stop()
 
+	return {'statusCode': 200}
 
-handler(10, 10)
+
+# handler(10, 10)

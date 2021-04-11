@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 import ssl
 import base64
 
+
 class Register:
 
 	@staticmethod

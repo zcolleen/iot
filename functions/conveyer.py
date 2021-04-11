@@ -35,11 +35,11 @@ class Conveyer:
 
 def publisher(conv):
 	i = 0
-	while i < 2:
-		conv.publish("$devices/are6c1grj2ojp532jr3u/events/done", payload="ready", qos=1)
-		print("message published")
-		sleep(10)
-		i = i + 1
+#	while i < 2:
+	conv.publish("$devices/are6c1grj2ojp532jr3u/events/done", payload="ready", qos=1)
+	print("message published")
+	sleep(10)
+#	i = i + 1
 
 
 def handler():
